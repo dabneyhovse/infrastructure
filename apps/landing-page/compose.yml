@@ -1,0 +1,20 @@
+services:
+  nginx:
+    image: nginx
+    security_opt:
+      - no-new-privileges:true
+    volumes:
+      - ./www:/usr/share/nginx/html:ro
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.web-nginx.entrypoints=web"
+      - "traefik.http.routers.web-nginx.rule=Host(`dabney.house`)"
+      - "traefik.http.routers.web-nginx-secure.entrypoints=websecure"
+      - "traefik.http.routers.web-nginx-secure.rule=Host(`dabney.house`)"
+    networks:
+      - traefik
+    restart: always
+
+networks:
+  traefik:
+    external: true
