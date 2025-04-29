@@ -1,3 +1,0 @@
-[submodule "services/dockge/dockge"]
-	path = services/dockge/dockge
-	url = https://github.com/mkoo21/dockge.git
