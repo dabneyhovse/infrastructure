@@ -11,7 +11,22 @@ services:
       # ⚠️ READ IT CAREFULLY. If you did it wrong, your data could end up writing into a WRONG PATH.
       # ⚠️ 1. FULL path only. No relative path (MUST)
       # ⚠️ 2. Left Stacks Path === Right Stacks Path (MUST)
-      - /home/comptroller/infrastructure:/home/comptroller/infrastructure
+      - /home/comptroller/infrastructure/apps:/home/comptroller/infrastructure/apps
+    labels:
+      - "traefik.enable=true"
+
+      - "traefik.http.routers.dockge.entrypoints=web"
+      - "traefik.http.routers.dockge.rule=Host(`containers.dabney.house`)"
+      - "traefik.http.routers.dockge-secure.entrypoints=websecure"
+      - "traefik.http.routers.dockge-secure.rule=Host(`containers.dabney.house`)"
+
+      - "traefik.http.services.dockge.loadbalancer.server.port=5001"
     environment:
       # Tell Dockge where to find the stacks
-      - DOCKGE_STACKS_DIR=/home/comptroller/infrastructure
+      - DOCKGE_STACKS_DIR=/home/comptroller/infrastructure/apps
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
