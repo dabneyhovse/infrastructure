@@ -11,7 +11,7 @@ services:
       # ⚠️ READ IT CAREFULLY. If you did it wrong, your data could end up writing into a WRONG PATH.
       # ⚠️ 1. FULL path only. No relative path (MUST)
       # ⚠️ 2. Left Stacks Path === Right Stacks Path (MUST)
-      - /home/comptroller/infrastructure/apps:/home/comptroller/infrastructure/apps
+      - /home/comptroller/infrastructure/services:/home/comptroller/infrastructure/services
     labels:
       - "traefik.enable=true"
 
@@ -23,7 +23,7 @@ services:
       - "traefik.http.services.dockge.loadbalancer.server.port=5001"
     environment:
       # Tell Dockge where to find the stacks
-      - DOCKGE_STACKS_DIR=/home/comptroller/infrastructure/apps
+      - DOCKGE_STACKS_DIR=/home/comptroller/infrastructure/services
     networks:
       - traefik
 
