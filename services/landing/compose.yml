@@ -1,8 +1,6 @@
 services:
   nginx:
-    build:
-      context: .
-      dockerfile: Dockerfile
+    image: ghcr.io/dabneyhovse/landing
     security_opt:
       - no-new-privileges:true
     labels:
