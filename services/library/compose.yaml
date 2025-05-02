@@ -1,0 +1,39 @@
+services:
+  koha:
+    container_name: koha_docker
+    ports:
+      - 6001:6001
+      - 8080:8080
+      - 8081:8081
+    image: digibib/koha
+    depends_on:
+      - koha-db
+  koha-db:
+      image: mariadb:10.4.12
+      container_name: koha_db
+      cap_add:
+      - MKNOD
+      command:
+      - --bind-address=0.0.0.0
+      - --slow-query-log=1
+      - --slow-query-log-file=/var/lib/mysql/slow-query.log
+      - --long-query-time=10
+      - --innodb-buffer-pool-size=1G
+      - --innodb-doublewrite=1
+      - --innodb-file-per-table=1
+      - --innodb-flush-log-at-trx-commit=2
+      - --query-cache-size=0
+      - --query-cache-type=0
+      - --max-allowed-packet=64M
+      - --wait-timeout=6000
+      environment:
+      - MYSQL_DATABASE=koha_${KOHA_INSTANCE}
+      - MYSQL_PASSWORD=${KOHA_ADMINPASS}
+      - MYSQL_ROOT_PASSWORD=${KOHA_ADMINPASS}
+      - MYSQL_USER=${KOHA_ADMINUSER}
+      - MYSQL_INITDB_SKIP_TZINFO=yes
+      - TZ=America/Los_Angeles
+      volumes:
+      - koha_db_data:/var/lib/mysql
+volumes:
+  koha_db_data:
