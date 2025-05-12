@@ -12,6 +12,12 @@ services:
       - letsencrypt:/letsencrypt
     networks:
       - traefik
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.dashboard.rule=Host(`router.dabney.house`)"
+      - "traefik.http.routers.dashboard.entrypoints=web,websecure"
+      - "traefik.http.routers.dashboard.service=api@internal"
+
 
 networks:
   traefik:

@@ -1,5 +1,6 @@
 api:
   dashboard: true
+  disabledashboardad: true
 
 entryPoints:
   web:
@@ -9,6 +10,8 @@ entryPoints:
     http:
       tls:
         certResolver: cloudflare
+
+
 
 providers:
   docker:

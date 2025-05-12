@@ -5,10 +5,8 @@ services:
       - no-new-privileges:true
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.web-nginx.entrypoints=web"
+      - "traefik.http.routers.web-nginx.entrypoints=web,websecure"
       - "traefik.http.routers.web-nginx.rule=Host(`dabney.house`)"
-      - "traefik.http.routers.web-nginx-secure.entrypoints=websecure"
-      - "traefik.http.routers.web-nginx-secure.rule=Host(`dabney.house`)"
     networks:
       - traefik
     restart: unless-stopped
