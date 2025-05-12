@@ -9,7 +9,7 @@ entryPoints:
     address: ":443"
     http:
       tls:
-        certResolver: cloudflare
+        certResolver: resolver
 
 
 
@@ -24,8 +24,10 @@ serversTransport:
   insecureSkipVerify: true
 
 certificatesResolvers:
-  cloudflare:
+  resolver:
     acme:
       storage: /letsencrypt/acme.json
       httpChallenge:
         entryPoint: web
+
+accessLog: {}
