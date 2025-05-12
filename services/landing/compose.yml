@@ -11,7 +11,7 @@ services:
       - "traefik.http.routers.web-nginx-secure.rule=Host(`dabney.house`)"
     networks:
       - traefik
-    restart: always
+    restart: unless-stopped
 
 networks:
   traefik:
