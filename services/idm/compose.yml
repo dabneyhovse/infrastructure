@@ -1,0 +1,24 @@
+services:
+  kanidm:
+    container_name: kanidm
+    image: kanidm/server
+    restart: unless-stopped
+    volumes:
+      - kanidm_data:/data
+      - ./server.toml:/data/server.toml
+      - ./keys/:/data/keys
+    labels:
+      - traefik.enable=true
+      - traefik.http.routers.kanidm.entrypoints=websecure
+      - traefik.http.routers.kanidm.rule=Host(`idm.dabney.house`)
+      - traefik.http.services.kanidm.loadbalancer.server.port=8443
+      - traefik.http.services.kanidm.loadbalancer.server.scheme=https
+    networks:
+      - traefik
+
+networks:
+  traefik:
+    external: true
+
+volumes:
+  kanidm_data: {}
