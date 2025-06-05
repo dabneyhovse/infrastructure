@@ -115,6 +115,3 @@ schedule = "00 22 * * *"
 #   at the beginning and the year at the end)
 #   Number of backups to keep (default 7)
 # versions = 7
-
-[kanidm]
-pam_allowed_login_groups = ["posix_group"]
