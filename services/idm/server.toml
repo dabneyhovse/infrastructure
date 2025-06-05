@@ -11,7 +11,7 @@ bindaddress = "[::]:8443"
 #   TLS certificates. If set to 636 you may require
 #   the NET_BIND_SERVICE capability.
 #   Defaults to "" (disabled)
-# ldapbindaddress = "[::]:3636"
+ldapbindaddress = "[::]:3636"
 #
 #   The path to the kanidm database.
 db_path = "/data/kanidm.db"
@@ -115,3 +115,6 @@ schedule = "00 22 * * *"
 #   at the beginning and the year at the end)
 #   Number of backups to keep (default 7)
 # versions = 7
+
+[kanidm]
+pam_allowed_login_groups = ["posix_group"]

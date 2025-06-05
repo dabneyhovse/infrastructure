@@ -6,11 +6,8 @@ services:
     labels:
       - "traefik.enable=true"
 
-      - "traefik.http.routers.docuwiki.entrypoints=web"
+      - "traefik.http.routers.docuwiki.entrypoints=web,websecure"
       - "traefik.http.routers.docuwiki.rule=Host(`wiki.dabney.house`)"
-      - "traefik.http.routers.docuwiki-secure.entrypoints=websecure"
-      - "traefik.http.routers.docuwiki-secure.rule=Host(`wiki.dabney.house`)"
-
       - "traefik.http.services.docuwiki.loadbalancer.server.port=8080"
     networks:
       - traefik

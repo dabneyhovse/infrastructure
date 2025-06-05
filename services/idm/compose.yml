@@ -1,5 +1,7 @@
 services:
   kanidm:
+    ports:
+      - "3636:3636" # expose ldap
     container_name: kanidm
     image: kanidm/server
     restart: unless-stopped
