@@ -44,7 +44,7 @@ services:
 
       - "traefik.http.routers.immich.entrypoints=web,websecure"
       - "traefik.http.routers.immich.rule=Host(`photos.dabney.house`)"
-      - "traefik.http.services.immich.loadbalancer.server.port=2283"
+      - "traefik.http.services.immich.loadbalancer.server.url=http://immich_server:2283" # i don't know why, but the ip traefik guesses is wrong for immich...
     expose:
       - "2283"
     ports:
