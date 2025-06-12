@@ -17,6 +17,7 @@ services:
       - ./historian:/app/shared
     networks:
       - immich
+      - traefik
     env_file:
       - .env
 
@@ -43,12 +44,8 @@ services:
       - "traefik.enable=true"
 
       - "traefik.http.routers.immich.entrypoints=web,websecure"
-      - "traefik.http.routers.immich.rule=Host(`photos.dabney.house`)"
+      - "traefik.http.routers.immich.rule=Host(`photos.dabney.house`) || Host(`photos.dabney.caltech.edu`)"
       - "traefik.http.services.immich.loadbalancer.server.url=http://immich_server:2283" # i don't know why, but the ip traefik guesses is wrong for immich...
-    expose:
-      - "2283"
-    ports:
-      - "2283:2283"
     networks:
       - immich
       - traefik
