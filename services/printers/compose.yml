@@ -1,0 +1,13 @@
+services:
+  paperboy:
+    restart: always
+    network_mode: host
+    build:
+      context: ./paperboy
+      dockerfile: ./Dockerfile
+    container_name: paperboy
+    volumes:
+      - ./paperboy/paperboy:/app/paperboy:ro
+    env_file:
+      - .env
+    command: poetry run python -m paperboy.main
