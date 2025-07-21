@@ -43,7 +43,7 @@ class JobRequest:
         printer_status = (
             self.printer.get_id() if self.printer else "an unselected printer"
         )
-        return f"You're printing {self.copies} copy(s) to {printer_status}. Modify your options below:"
+        return f"You're printing {self.copies} {"copy" if self.copies == 1 else "copies"} to {printer_status}. Modify your options below:"
 
     async def create_job(self) -> int:
         if not self.printer:
