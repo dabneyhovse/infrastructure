@@ -19,6 +19,14 @@ class Printer:
         "Apathy": "😶 @ Lounge",
     }
 
+    PRINTER_HAS_COLOR = {
+        "Love": True,
+        "Hope": True,
+        "Joy": True,
+        "Peace": False,
+        "Apathy": False,
+    }
+
     def get_short_id(self) -> str:
         if self.name in self.PRINTER_ALIAS:
             return self.PRINTER_ALIAS[self.name]
@@ -26,12 +34,26 @@ class Printer:
 
     def get_id(self) -> str:
         return f"{self.name} @ {self.location}"
+    
+    def get_cap_color(self) -> bool:
+        if self.name in self.PRINTER_HAS_COLOR:
+            return self.PRINTER_HAS_COLOR[self.name]
+        else:
+            # Hopefully this path never gets used!
+            conn = cups.Connection()
+            color_modes: (list[str]) = conn.getPrinterAttributes(self.name, requested_attributes=["print-color-mode-supported"]).get("print-color-mode-supported")
+            # It *shouldn't* ever return something other than a list[str] but...
+            if type(color_modes) is not list[str]:
+                return False
+            return True if "color" in color_modes else False
 
 
 class JobRequest:
     printer: Printer | None
     media: Media
     copies: int = 1
+    duplex: bool = True
+    color: bool = True
     name: str
 
     def __init__(self, printer: Printer | None, file: Media, name: str) -> None:
@@ -43,7 +65,10 @@ class JobRequest:
         printer_status = (
             self.printer.get_id() if self.printer else "an unselected printer"
         )
-        return f"You're printing {self.copies} {"copy" if self.copies == 1 else "copies"} to {printer_status}. Modify your options below:"
+        color_status = (
+            "" if not self.printer else " in color" if self.color else " in greyscale"
+        )
+        return f"You're printing {self.copies} {"copy" if self.copies == 1 else "copies"}{color_status} to {printer_status}. Modify your options below:"
 
     async def create_job(self) -> int:
         if not self.printer:
@@ -55,6 +80,8 @@ class JobRequest:
             self.name,
             {
                 "copies": str(self.copies),
+                "sides": "two-sided-long-edge" if self.duplex else "one-sided",
+                "print-color-mode": "color" if self.color and self.printer.get_cap_color() else "monochrome",
             },
         )
         if not job_id:

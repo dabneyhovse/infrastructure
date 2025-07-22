@@ -13,6 +13,8 @@ class JobRequestCallbackType(Enum):
     SET_PRINTER = 1
     SET_COPIES = 2
     PRINT = 3
+    SET_DUPLEX = 4
+    SET_COLOR = 5
 
 
 def format_job_name(media: Media, user: User) -> str:
@@ -20,6 +22,19 @@ def format_job_name(media: Media, user: User) -> str:
 
 
 def generate_keyboard(job: JobRequest) -> InlineKeyboardMarkup:
+    print_option_buttons = [
+        InlineKeyboardButton(
+            f"Print {"one-sided" if job.duplex else "two-sided"}",
+            callback_data=(JobRequestCallbackType.SET_DUPLEX, not job.duplex),
+        ),
+    ]
+    if job.printer and job.printer.get_cap_color():
+        print_option_buttons.append(
+            InlineKeyboardButton(
+                "🙾 Greyscale 🙾" if job.color else "🌈 Color 🎨",
+                callback_data=(JobRequestCallbackType.SET_COLOR, not job.color),
+            )
+        )
     return InlineKeyboardMarkup(
         [
             [
@@ -41,6 +56,9 @@ def generate_keyboard(job: JobRequest) -> InlineKeyboardMarkup:
                     "+1 Copy",
                     callback_data=(JobRequestCallbackType.SET_COPIES, job.copies + 1),
                 ),
+            ],
+            [
+                button for button in print_option_buttons
             ],
             [
                 InlineKeyboardButton(
@@ -100,6 +118,10 @@ async def handle_job_request_callback(
             req.printer = args[0]
         case JobRequestCallbackType.SET_COPIES:
             req.copies = args[0]
+        case JobRequestCallbackType.SET_DUPLEX:
+            req.duplex = args[0]
+        case JobRequestCallbackType.SET_COLOR:
+            req.color = args[0]
         case JobRequestCallbackType.PRINT:
             context.bot_data.pop(msg.message_id, None)
             try:
