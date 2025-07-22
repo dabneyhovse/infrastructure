@@ -116,6 +116,7 @@ async def handle_job_request_callback(
             return
         case JobRequestCallbackType.SET_PRINTER:
             req.printer = args[0]
+            req.color = True if args[0].get_cap_color() else False
         case JobRequestCallbackType.SET_COPIES:
             req.copies = args[0]
         case JobRequestCallbackType.SET_DUPLEX:

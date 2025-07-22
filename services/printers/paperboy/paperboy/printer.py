@@ -53,7 +53,7 @@ class JobRequest:
     media: Media
     copies: int = 1
     duplex: bool = True
-    color: bool = True
+    color: bool = False
     name: str
 
     def __init__(self, printer: Printer | None, file: Media, name: str) -> None:
