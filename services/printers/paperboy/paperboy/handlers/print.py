@@ -31,7 +31,7 @@ def generate_keyboard(job: JobRequest) -> InlineKeyboardMarkup:
     if job.printer and job.printer.get_cap_color():
         print_option_buttons.append(
             InlineKeyboardButton(
-                "🙾 Greyscale 🙾" if job.color else "🌈 Color 🎨",
+                "🩶 Greyscale" if job.color else "🌈 Color",
                 callback_data=(JobRequestCallbackType.SET_COLOR, not job.color),
             )
         )

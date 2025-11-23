@@ -19,7 +19,8 @@ load_dotenv()
 
 BOT_TOKEN = os.getenv("TG_TOKEN", "")
 CUPS_SERVER = os.getenv("CUPS_SERVER", "")
-BOT_API_BASE_URL = os.getenv("TG_API_BASE_URL")
+BOT_API_BASE_URL = os.getenv("TG_API_BASE_URL", "")
+BOT_API_FILE_BASE_URL = os.getenv("TG_API_FILE_BASE_URL", "")
 
 logging.getLogger("httpx").setLevel(logging.WARNING)
 logging.basicConfig(
@@ -47,9 +48,10 @@ def main() -> None:
 
     app = (
         ApplicationBuilder()
-        .local_mode(True)
-        .base_url(BOT_API_BASE_URL)
         .token(BOT_TOKEN)
+        .base_url(BOT_API_BASE_URL)
+        .base_file_url(BOT_API_FILE_BASE_URL)
+        .local_mode(True)
         .arbitrary_callback_data(True)
         .post_init(post_init)
     ).build()
