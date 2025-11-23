@@ -1,6 +1,7 @@
 import io
 from dataclasses import dataclass
 from io import BytesIO
+from pathlib import Path
 
 from PIL import Image
 from telegram import Message
@@ -22,16 +23,17 @@ def convert_img_to_png(file_io):
 
 
 async def create_media(attachment: _BaseMedium, name: str, mime_type: str) -> Media:
-    file = await attachment.get_file()
+    file = await attachment.get_file(read_timeout=120)
     file_bytes = io.BytesIO()
-    await file.download_to_memory(file_bytes)
-    if mime_type == "image/webp":
-        file_bytes.seek(0)
-        file_bytes = convert_img_to_png(file_bytes)
-        mime_type = "image/png"
-    data = file_bytes.getvalue()
-    return Media(data, name, mime_type)
-
+    local_path = await file.download_to_drive()
+    with Path(local_path).open("rb") as f:
+        file_bytes = io.BytesIO(f.read())
+        if mime_type == "image/webp":
+            file_bytes.seek(0)
+            file_bytes = convert_img_to_png(file_bytes)
+            mime_type = "image/png"
+        data = file_bytes.getvalue()
+        return Media(data, name, mime_type)
 
 async def extract_media(msg: Message) -> Media | None:
     if (document := msg.document) and document.mime_type:
