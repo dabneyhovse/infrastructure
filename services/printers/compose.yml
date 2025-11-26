@@ -11,7 +11,6 @@ services:
       - telegram-bot-api-data:/var/lib/telegram-bot-api:ro
     env_file:
       - .env
-    command: poetry run python -m paperboy.main
 
   telegram-bot-api:
     restart: always
