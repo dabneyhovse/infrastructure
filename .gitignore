@@ -1,1 +1,6 @@
 **/.env
+
+# python ignores
+*.egg-info/
+__pycache__/
+.venv

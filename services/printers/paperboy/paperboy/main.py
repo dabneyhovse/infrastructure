@@ -14,6 +14,7 @@ from telegram.ext import (
 
 from paperboy.handlers.print import handle_job_request, handle_job_request_callback
 from paperboy.handlers.start import handle_start
+from paperboy.handlers.error import handle_error
 
 load_dotenv()
 
@@ -42,6 +43,7 @@ async def post_init(app: Application) -> None:
         )
     )
     app.add_handler(CallbackQueryHandler(handle_job_request_callback))
+    app.add_error_handler(handle_error)
 
 
 def main() -> None:

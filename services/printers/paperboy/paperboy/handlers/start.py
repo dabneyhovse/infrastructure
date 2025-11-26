@@ -8,3 +8,4 @@ async def handle_start(update: Update, context: ContextTypes.DEFAULT_TYPE) -> No
     await msg.reply_text(
         "Welcome! Please send me a document, photo, or sticker to print."
     )
+    raise "nyyaaa"
