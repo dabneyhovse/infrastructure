@@ -3,6 +3,7 @@ from enum import Enum
 
 from telegram import InlineKeyboardButton, InlineKeyboardMarkup, Update, User
 from telegram.ext import ContextTypes
+from telegram.constants import ParseMode
 
 from paperboy.media import Media, extract_media
 from paperboy.printer import JobRequest, get_printers
@@ -132,8 +133,9 @@ async def handle_job_request_callback(
                 return
             await query.edit_message_text(
                 text=(
-                    f"Document sent to {req.printer.get_id()} successfully. The job ID is {job_id}."  # type: ignore
-                )
+                    f"Document sent to {req.printer.get_id()} successfully. See the status of job [{job_id}](https://cups.dabney.caltech.edu/printers/{req.printer.name}?WHICH_JOBS=all&QUERY={job_id})."  # type: ignore
+                ),
+                parse_mode=ParseMode.MARKDOWN,
             )
             return
     await query.edit_message_text(req.get_status(), reply_markup=generate_keyboard(req))
