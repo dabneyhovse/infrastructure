@@ -16,6 +16,6 @@ async fn main() {
         .route("/print", post(routes::print::route))
         .nest_service("/static", ServeDir::new("static"));
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:80").await.unwrap();
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:8080").await.unwrap();
     axum::serve(listener, app).await.unwrap();
 }
