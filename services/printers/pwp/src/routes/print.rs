@@ -13,7 +13,12 @@ pub struct PrintForm {
 pub async fn route(TypedMultipart(form): TypedMultipart<PrintForm>) -> Html<String> {
     let destination = match cups_rs::get_destination(&form.printer) {
         Ok(destination) => destination,
-        Err(error) => return Html(print_form::message(&error.to_string()).into_string()),
+        Err(error) => {
+            return Html(
+                print_form::error_alert(&format!("Failed to find printer destination: {error}"))
+                    .into_string(),
+            );
+        }
     };
 
     let title = form
@@ -32,15 +37,25 @@ pub async fn route(TypedMultipart(form): TypedMultipart<PrintForm>) -> Html<Stri
 
     let job = match cups_rs::create_job(&destination, &title) {
         Ok(job) => job,
-        Err(error) => return Html(print_form::message(&error.to_string()).into_string()),
+        Err(error) => {
+            return Html(
+                print_form::error_alert(&format!("Failed to create print job: {error}"))
+                    .into_string(),
+            );
+        }
     };
 
     if let Err(error) = job.submit_file(&path, &content_type) {
-        return Html(print_form::message(&error.to_string()).into_string());
+        return Html(
+            print_form::error_alert(&format!("Failed to submit print file: {error}")).into_string(),
+        );
     }
 
     if let Err(error) = job.close() {
-        return Html(print_form::message(&error.to_string()).into_string());
+        return Html(
+            print_form::error_alert(&format!("Failed to finalize print job: {error}"))
+                .into_string(),
+        );
     }
 
     Html(print_form::message("Print job submitted.").into_string())

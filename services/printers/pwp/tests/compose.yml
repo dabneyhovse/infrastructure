@@ -1,0 +1,28 @@
+services:
+  cups:
+    image: olbat/cupsd:latest
+    ports:
+      - "631:631"
+    volumes:
+      - ./cups-output:/output
+    command:
+      - /bin/sh
+      - -euxc
+      - |
+        sed -i \
+          -e 's#^Out[[:space:]].*#Out /output#' \
+          -e 's#^[#[:space:]]*AnonDirName[[:space:]].*#AnonDirName /output#' \
+          /etc/cups/cups-pdf.conf
+        mkdir -p /output
+
+        /usr/sbin/cupsd -f &
+        until lpstat -h localhost -r 2>/dev/null | grep -q "is running"; do
+          sleep 0.2
+        done
+
+        lpadmin -h localhost -p MockPrinter -E -v cups-pdf:/ -m lsb/usr/cups-pdf/CUPS-PDF_opt.ppd
+        lpadmin -h localhost -p MockPrinter -o printer-is-shared=true
+
+        cupsenable -h localhost MockPrinter
+        cupsaccept -h localhost MockPrinter
+        wait

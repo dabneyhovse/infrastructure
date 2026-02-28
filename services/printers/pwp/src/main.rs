@@ -1,7 +1,10 @@
 mod components;
 mod routes;
 
-use axum::{Router, routing::{get, post}};
+use axum::{
+    Router,
+    routing::{get, post},
+};
 use std::env;
 use tower_http::services::ServeDir;
 

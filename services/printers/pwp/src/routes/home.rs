@@ -16,21 +16,26 @@ pub fn home_page() -> Markup {
                 fieldset {
                     legend { "Print a file" }
 
-                    input id="file" type="file" name="file" required onchange="previewFile(this)" {}
+                    label data-field {
+                        input id="file" type="file" name="file" required onchange="previewFile(this)" {}
+                    }
 
                     div id="file-preview" {}
 
-                    div
-                        id="printer-field"
-                        hx-get="/printers"
-                        hx-trigger="load"
-                        hx-target="this"
-                        hx-swap="innerHTML"
-                    {
-                        p { "Loading printers..." }
-                    }
+                    fieldset class="group" {
+                        div
+                            id="printer-field"
+                            class="w-100 flex items-center"
+                            hx-get="/printers"
+                            hx-trigger="load"
+                            hx-target="this"
+                            hx-swap="outerHTML"
+                        {
+                            div role="status" class="skeleton line printer-control" {}
+                        }
 
-                    button type="submit" { "Print" }
+                        button type="submit" class="printer-control" { "Print" }
+                    }
                 }
             }
 
