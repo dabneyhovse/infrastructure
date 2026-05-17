@@ -1,0 +1,9 @@
+services:
+  app:
+    build: ../../../dabney-lateplate-bot
+    container_name: dabney-lateplate-bot
+    restart: unless-stopped
+    env_file:
+      - ../../../dabney-lateplate-bot/.env
+    environment:
+      TZ: America/Los_Angeles
